@@ -1,13 +1,43 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>Editor PDF</title>
+    <link rel="stylesheet" href="/src/index.css" />
+    <script type="module" src="/src/pdfjs/pdf.min.mjs"></script>
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      const waitPdfjsLibLoaded = async () => {
+        return new Promise(function (resolve) {
+          let loaded = false;
+          let timer = setInterval(() => {
+            if (typeof pdfjsLib !== "undefined" && !loaded) {
+              clearInterval(timer);
+              loaded = true;
+              pdfjsLib.GlobalWorkerOptions.workerSrc =
+                "/src/pdfjs/pdf.worker.mjs";
+              resolve(null);
+            }
+          }, 300);
+        });
+      };
+
+      const loadData = async () => {
+        try {
+          await waitPdfjsLibLoaded();
+        } catch (e) {
+          // ERROR
+        }
+        //finally {
+        // LOADED
+        //}
+      };
+      loadData();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
